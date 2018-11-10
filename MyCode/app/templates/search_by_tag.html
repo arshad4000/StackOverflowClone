@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}    
+<div class="container">
+  <br/>  
+  {% if nomatches %}
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8">
+        <div class="card-body row no-gutters align-items-center">
+          <div class="col-auto">
+            No matches found..
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    {% for question in titles.keys() %}
+      <div class="list-group">
+        <a href="/question/{{links[question]}}" class="list-group-item list-group-item-action flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{titles[question]}}</h5>
+            <!-- <small>3 days ago</small> -->
+          </div>
+          <!--tags-->
+          <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>          
+          {% for tag in tags[question] %}
+            <small>{{tag.body}}</small>
+          {% endfor %}
+        </a>
+      </div>
+    {% endfor %}
+  {% endif %}
+  
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+<form method="POST" action="">
+    <div class="form-group" style="width:100%">
+      <label for="exampleFormControlTextarea1">Answer</label>
+      <textarea class="form-control" name="content" id="exampleFormControlTextarea1" rows="5"></textarea>
+    </div>
+    <div class="form-group" style="width:100%">
+        <label for="exampleFormControlTextarea1">Code</label>
+        <textarea class="form-control" name="code" id="exampleFormControlTextarea1" rows="5"></textarea>
+      </div>
+      <input type="submit" value="Submit" class="btn btn-primary"/>
+      <button type="reset" onclick="window.history.back();" class="btn btn-primary">Cancel</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+
+Pip modules needed for the app to run
+- flask
+- wtforms
+- sqlalchemy
+- flask-sqlalchemy
+
+
+Before running :
+- change SQLALCHEMY_DATABASE_URI path in __init__.py to your local absolute path.
+

@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% block content %}    
+<div class="container"> 
+  {% if question %}
+    <div class="well">
+
+      <!-- Question-->
+      <div class="media">
+        <div class="media-body">
+          <br/>
+          <h4 class="media-heading">{{question.title}}</h4>
+          <p class="text-right">Asked by <a href="/profile/{{question.user_id}}">{{postedby}}</a></p>
+            <p>{{question.body}}</p>
+            <p><pre style="background:#E1E0E0">{{question.code}}</pre></p>
+            <ul class="list-inline list-unstyled">
+              <li><span><i class="glyphicon glyphicon-calendar">Posted on</i> {{question.timestamp}} </span></li>
+                <small>Tags: </small> {% for tag in tags %}
+                <a href="/search_by_tag/{{tag.body}}"><small>{{tag.body}}</small></a>
+                {% endfor %}                   
+                <!-- comments -->                
+            </ul>
+            {% if question.answered %}
+              <small>Answered : </small> <img src="/static/images/accepted.jpg" style="height: 20px; width:20px" alt="answered"/>              
+            {% endif %}
+            <br/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Question comments -->
+      <div>
+        <br/>
+        <small>Comments:</small>
+        <ul class="list-inline list-unstyled">
+          {% if question_comments %}
+            {% for comment in question_comments %}            
+              <li><small><b>{{question_commenters[comment.user_id]}} : </b>{{comment.body}}</small></li>
+              <!-- <p class="text-right"><li><small>{{comment.user_id}}</small></li></p> -->
+            {% endfor %}
+          {% else %}
+            <i><small>No comments yet.</small></i>
+          {% endif %}
+        </ul>
+      </div>
+      <div>
+        <small>
+          <u>
+            <!-- Post a comment... -->
+            <input type="text" class="form-control" style="border:none;font-size:12px" id="question_comment_{{question.question_id}}" placeholder="Post a comment.." />
+            <br/>
+            <button onclick="submitCommentForQuestion({{question.question_id}})">Submit</button>
+          </u>
+        </small>
+      </div>
+
+      <!-- The Modal -->
+      <!-- <div id="myModal" class="modal"> -->
+        <!-- Modal content -->
+        <!-- <div class="modal-content">
+            <div class="form-group" style="width:100%">
+                <label for="exampleFormControlTextarea1">Comment</label>
+                <input type="text" class="form-control" name="title" id="exampleFormControlTextarea1" onclick="submitCommentForQuestion({{question.question_id}})" />
+            </div>
+            <div class="form-group" style="width:100%">              
+                <input type="submit" value="Post" class="btn btn-secondary"/>
+                <button id="close" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+      </div> -->
+
+    {% endif %}
+    <br/>
+
+    <hr class="style2"/>
+    <!-- Answers-->
+    {% if answers %}
+      <h4 class="media-heading">Answers</h4>
+      {% for answer in answers %}
+        <div class="well" style="border:1px solid black; padding : 15px;">
+            <div class="media">
+              <div class="media-body">
+                <br/>                
+                  <p style="font-size:14px;">{{answer.body}}</p>
+                  <p style="font-size:6px;"><pre style="background:#E1E0E0; font-size:12px">{{answer.code}}</pre></p>
+                  <p>
+                  <b id="nofupvotes{{answer.answer_id}}" class="vote-green" style="color:green">+{{upvotes[answer.answer_id]}}</b>  <button onClick="doUpvote({{answer.answer_id}});">+</button>
+                  &nbsp;
+                  <b style="color:red" id="nofdownvotes{{answer.answer_id}}">-{{downvotes[answer.answer_id]}}</b>   <button onClick="doDownvote({{answer.answer_id}});">-</button>
+                </p>                  
+                  <p class="text-right">answered by <a href="/profile/{{answer.user_id}}"><b>{{commenters[answer.answer_id]}}</b> </a>
+                    <i>{{reputation[answer.user_id]}} rating</i>
+                    <!-- <span style="color:orange" class="fa fa-star checked"></span> -->
+                  </p>
+                  <p class="text-right">on {{ answer.timestamp }}</p>
+                  <hr/>
+                  <!-- Answer comments-->
+                  <div>
+                      <small>Comments:</small>
+                      {% if answer_comments %}
+                        <ul class="list-inline list-unstyled">
+                          {% for comment in answer_comments[answer.answer_id] %}            
+                            <li><small><b>{{answer_commenters[comment.comment_id]}} : </b>{{comment.body}}</small></li>
+                            <!-- <p class="text-right"><li><small>{{comment.user_id}}</small></li></p> -->
+                          {% endfor %}
+                        </ul>
+                      {% else %}
+                        <i><small>No comments yet</small></i>
+                      {% endif %}
+                    </div>
+                    <!-- <a id="myBtn" onclick="setCommentAnswerId({{answer.answer_id}});"><small><u>Post a comment...</u></small> </a> -->
+                    <div>
+                        <small>
+                          <u>
+                            <!-- Post a comment... -->
+                            <input type="text" class="form-control" style="border:none;font-size:12px" name="title" id="answer_comment_{{answer.answer_id}}" placeholder="Post a comment.." />
+                            <br/>
+                            <button onclick="submitCommentForAnswer({{answer.answer_id}})">Submit</button>
+                          </u>
+                        </small>
+                      </div>
+                </div>
+
+                
+              </div>
+            </div>
+            <hr/>
+            
+      {% endfor %}
+
+      <!-- Modal content
+      <div class="modal-content">
+          <div class="form-group" style="width:100%">
+              <label for="exampleFormControlTextarea1">Comment</label>
+              <input type="text" class="form-control" name="title" id="exampleFormControlTextarea1" />
+          </div>
+          <div class="form-group" style="width:100%">              
+              <input type="submit" value="Post" class="btn btn-secondary"/>
+              <button id="close" class="btn btn-secondary">Cancel</button>
+          </div>
+        </div>
+      </div> -->
+      
+
+    {% endif %}
+
+    {% if question and session.loggedin %}
+      <a href="/answer/{{question.question_id}}" class="btn btn-success">Post an answer</a>
+    {% endif %}
+    
+  </div>
+  {% endblock %}
